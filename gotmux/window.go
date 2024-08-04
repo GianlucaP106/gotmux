@@ -6,6 +6,7 @@ package gotmux
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 
 	"github.com/GianlucaP106/gotmux/gotmux/vars"
@@ -52,6 +53,21 @@ type Window struct {
 
 	tmux *Tmux
 }
+
+// Window layout.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#WINDOWS_AND_PANES
+type WindowLayout string
+
+// Enumeration of window layouts.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#WINDOWS_AND_PANES
+const (
+	WindowLayoutEvenHorizontal WindowLayout = "even-horizontal"
+	WindowLayoutEvenVertical   WindowLayout = "even-vertical"
+	WindowLayoutMainVertical   WindowLayout = "main-horizontal"
+	WindowLayoutTiled          WindowLayout = "tiled"
+)
 
 // List panes for this window.
 //
@@ -103,7 +119,6 @@ func (w *Window) Rename(newName string) error {
 		return errors.New("failed to rename window")
 	}
 
-	w.Name = newName
 	return nil
 }
 
@@ -120,6 +135,55 @@ func (w *Window) Select() error {
 	}
 
 	return nil
+}
+
+// Selects the layout for this window.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#select-layout
+func (w *Window) SelectLayout(layout WindowLayout) error {
+	_, err := w.tmux.query().
+		cmd("select-layout").
+		fargs("-t", w.Id).
+		pargs(string(layout)).
+		run()
+	if err != nil {
+		return errors.New("failed to select layout")
+	}
+
+	return nil
+}
+
+// Move this window to a different location.
+// This will return an error if the window already exists.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#move-window
+func (w *Window) Move(targetSession string, targetIdx int) error {
+	_, err := w.tmux.query().
+		cmd("move-window").
+		fargs("-s", w.Id).
+		fargs("-t", fmt.Sprintf("%s:%d", targetSession, targetIdx)).
+		run()
+	if err != nil {
+		return errors.New("failed to move window")
+	}
+
+	return nil
+}
+
+// Gets a pane by index in this window.
+func (w *Window) GetPaneByIndex(idx int) (*Pane, error) {
+	panes, err := w.ListPanes()
+	if err != nil {
+		return nil, errors.New("failed to get pane by index")
+	}
+
+	for _, p := range panes {
+		if p.Index == idx {
+			return p, nil
+		}
+	}
+
+	return nil, nil
 }
 
 // Sets the window variables in the query.
