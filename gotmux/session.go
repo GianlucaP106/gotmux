@@ -96,7 +96,7 @@ func (s *Session) AttachSession(op *AttachSessionOptions) error {
 
 // Attaches the current client to the session.
 // Since this requires a client, it will attach to the terminal by redirecting.
-// Sorthand for 'AttachSession', but runs with default configuration.
+// Shorthand for 'AttachSession', but with default configuration.
 //
 // Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#attach-session
 func (s *Session) Attach() error {
@@ -145,7 +145,6 @@ func (s *Session) Rename(name string) error {
 		return errors.New("failed to rename session")
 	}
 
-	s.Name = name
 	return nil
 }
 
@@ -170,6 +169,22 @@ func (s *Session) ListWindows() ([]*Window, error) {
 	}
 
 	return out, nil
+}
+
+// Gets a window by index in this session.
+func (s *Session) GetWindowByIndex(idx int) (*Window, error) {
+	windows, err := s.ListWindows()
+	if err != nil {
+		return nil, errors.New("failed to get window by idx")
+	}
+
+	for _, w := range windows {
+		if w.Index == idx {
+			return w, nil
+		}
+	}
+
+	return nil, nil
 }
 
 // New window options.
@@ -213,14 +228,23 @@ func (s *Session) NewWindow(op *NewWindowOptions) (*Window, error) {
 	return w, nil
 }
 
+// Creates a new window in this session.
+// Shorthand for 'NewWindow', but with default options.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#new-window
+func (s *Session) New() (*Window, error) {
+	return s.NewWindow(nil)
+}
+
 // Selects the next window.
 //
 // Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#next-window
 func (s *Session) NextWindow() error {
-	_, err := s.tmux.query().
+	q := s.tmux.query().
 		cmd("next-window").
-		fargs("-t", s.Name).
-		run()
+		fargs("-t", s.Name)
+
+	_, err := q.run()
 	if err != nil {
 		return errors.New("failed to select next window")
 	}
@@ -232,10 +256,11 @@ func (s *Session) NextWindow() error {
 //
 // Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#previous-window
 func (s *Session) PreviousWindow() error {
-	_, err := s.tmux.query().
+	q := s.tmux.query().
 		cmd("previous-window").
-		fargs("-t", s.Name).
-		run()
+		fargs("-t", s.Name)
+
+	_, err := q.run()
 	if err != nil {
 		return errors.New("failed to select the previous window")
 	}

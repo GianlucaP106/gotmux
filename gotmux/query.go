@@ -16,7 +16,7 @@ import (
 const sep = "-:-"
 
 // Represents a query to tmux.
-// Includes flag arguments, positional arguments, tmuc command and tmux vars.
+// Includes flag arguments, positional arguments, tmux command and tmux vars.
 type query struct {
 	fArgs     []string
 	pArgs     []string

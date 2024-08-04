@@ -6,6 +6,7 @@ package gotmux
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 
 	"github.com/GianlucaP106/gotmux/gotmux/vars"
@@ -58,19 +59,32 @@ type Pane struct {
 	tmux *Tmux
 }
 
-// Type representing the relative position of panes
+// Pane relative position.
 //
 // TODO: Reference:
 type PanePosition string
 
-// Enumeratioe pane positions
+// Enumeration of pane positions.
 //
 // TODO: Reference:
 const (
-	PaneUp    PanePosition = "-U"
-	PaneRight PanePosition = "-R"
-	PaneDown  PanePosition = "-D"
-	PaneLeft  PanePosition = "-L"
+	PanePositionUp    PanePosition = "-U"
+	PanePositionRight PanePosition = "-R"
+	PanePositionDown  PanePosition = "-D"
+	PanePositionLeft  PanePosition = "-L"
+)
+
+// Pane split direction.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#split-window
+type PaneSplitDirection string
+
+// Enumeration of pane split directions.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#split-window
+const (
+	PaneSplitDirectionHorizontal PaneSplitDirection = "-h"
+	PaneSplitDirectionVertical   PaneSplitDirection = "-v"
 )
 
 // Kills the pane.
@@ -118,11 +132,84 @@ func (p *Pane) SelectPane(op *SelectPaneOptions) error {
 }
 
 // Selects the pane with the provided options.
-// Shorthand of the method above but with default options
+// Shorthand 'SelectPane' but with default options.
 //
 // Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#select-pane
 func (p *Pane) Select() error {
 	return p.SelectPane(nil)
+}
+
+// Split window options.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#split-window
+type SplitWindowOptions struct {
+	SplitDirection PaneSplitDirection
+	StartDirectory string
+	ShellCommand   string
+}
+
+// Split the window (pane).
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#split-window
+func (p *Pane) SplitWindow(op *SplitWindowOptions) error {
+	q := p.tmux.query().
+		cmd("split-window").
+		fargs("-t", p.Id)
+
+	if op != nil {
+		if op.SplitDirection != "" {
+			q.fargs(string(op.SplitDirection))
+		}
+
+		if op.StartDirectory != "" {
+			q.fargs("-c", op.StartDirectory)
+		}
+
+		if op.ShellCommand != "" {
+			q.pargs(fmt.Sprintf("'%s'", op.ShellCommand))
+		}
+	}
+
+	_, err := q.run()
+	if err != nil {
+		return errors.New("failed to split pane")
+	}
+
+	return nil
+}
+
+// Choose tree options.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#choose-tree
+type ChooseTreeOptions struct {
+	SessionsCollapsed bool
+	WindowsCollapsed  bool
+}
+
+// Puts the pane in choose tree mode.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#choose-tree
+func (p *Pane) ChooseTree(op *ChooseTreeOptions) error {
+	q := p.tmux.query().
+		cmd("choose-tree").
+		fargs("-t", p.Id)
+
+	if op != nil {
+		if op.SessionsCollapsed {
+			q.fargs("-s")
+		}
+
+		if op.WindowsCollapsed {
+			q.fargs("-w")
+		}
+	}
+
+	_, err := q.run()
+	if err != nil {
+		return errors.New("failed to put the pane in choose tree mode")
+	}
+
+	return nil
 }
 
 // Sets the pane variables in the query.

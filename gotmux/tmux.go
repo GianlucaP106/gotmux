@@ -170,6 +170,14 @@ func (t *Tmux) NewSession(op *SessionOptions) (*Session, error) {
 	return s, nil
 }
 
+// Creates a new session without attaching.
+// Shorthand for 'NewSession', but with default options.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#new-session
+func (w *Tmux) New() (*Session, error) {
+	return w.NewSession(nil)
+}
+
 // Options object for detaching a session.
 //
 // Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#detach-client
@@ -233,6 +241,60 @@ func (t *Tmux) ListAllWindows() ([]*Window, error) {
 	}
 
 	return out, nil
+}
+
+// Lists all panes in the server.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#list-panes
+func (t *Tmux) ListAllPanes() ([]*Pane, error) {
+	o, err := t.query().
+		cmd("list-panes").
+		fargs("-a").
+		paneVars().
+		run()
+	if err != nil {
+		return nil, errors.New("failed to list all panes")
+	}
+
+	out := make([]*Pane, 0)
+	for _, r := range o.collect() {
+		p := r.toPane(t)
+		out = append(out, p)
+	}
+
+	return out, nil
+}
+
+// Returns the window with the given Id
+func (t *Tmux) GetWindowById(id string) (*Window, error) {
+	windows, err := t.ListAllWindows()
+	if err != nil {
+		return nil, err
+	}
+
+	for _, w := range windows {
+		if w.Id == id {
+			return w, nil
+		}
+	}
+
+	return nil, nil
+}
+
+// Returns the pane with the given Id
+func (t *Tmux) GetPaneById(id string) (*Pane, error) {
+	panes, err := t.ListAllPanes()
+	if err != nil {
+		return nil, err
+	}
+
+	for _, p := range panes {
+		if p.Id == id {
+			return p, nil
+		}
+	}
+
+	return nil, nil
 }
 
 // Adds socket argument.
