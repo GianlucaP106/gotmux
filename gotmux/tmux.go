@@ -7,7 +7,9 @@ package gotmux
 import (
 	"errors"
 	"fmt"
+	"os/exec"
 	"strconv"
+	"strings"
 )
 
 // Entrypoint object to the library.
@@ -20,6 +22,9 @@ type Tmux struct {
 // Initializes the tmux client with a socket path.
 // Entry point to the library.
 func NewTmux(socketPath string) (*Tmux, error) {
+	if !isTmuxInstalled() {
+		return nil, errors.New("tmux is not installed on the system")
+	}
 	t := &Tmux{}
 	s, err := newSocket(socketPath)
 	if err != nil {
@@ -32,10 +37,13 @@ func NewTmux(socketPath string) (*Tmux, error) {
 
 // Initializes the tmux client with default socket.
 // Entry point to the library.
-func DefaultTmux() *Tmux {
+func DefaultTmux() (*Tmux, error) {
+	if !isTmuxInstalled() {
+		return nil, errors.New("tmux is not installed on the system")
+	}
 	return &Tmux{
 		Socket: nil,
-	}
+	}, nil
 }
 
 // List all clients.
@@ -304,4 +312,37 @@ func (t *Tmux) query() *query {
 		q.cmd("-S", t.Socket.Path)
 	}
 	return q
+}
+
+// Checks if a string is 1.
+func isOne(s string) bool {
+	return s == "1"
+}
+
+// Splits a string by comma.
+func parseList(l string) []string {
+	return strings.Split(l, ",")
+}
+
+// Checks the validity of the tmux session name.
+func checkSessionName(name string) bool {
+	if len(name) == 0 {
+		return false
+	}
+
+	if strings.Contains(name, ":") {
+		return false
+	}
+
+	if strings.Contains(name, ".") {
+		return false
+	}
+
+	return true
+}
+
+// Returns true if tmux is installed on the system otherwise false.
+func isTmuxInstalled() bool {
+	_, err := exec.LookPath("tmux")
+	return err == nil
 }
