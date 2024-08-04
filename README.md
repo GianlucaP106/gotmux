@@ -69,4 +69,4 @@ func main() {
 
 ## Data snapshots
 
-The objects returned (Session, Window, Pane...), contain data attributes and methods and some methods are mutating. These methods do not update themselves or other generated objects. Therefore their data will be outdated as soon as a mutating action occurs (through the library or in through other clients). This may be something to consider while building your applications.
+The objects returned (Session, Window, Pane...), contain data attributes and methods. Some methods are mutating. These methods do not update themselves or other generated objects, the data in the objects are snapshots from when they were first fetched. Therefore their data will be outdated as soon as a mutating action occurs (through the library or in through other clients). This may be something to consider while building your applications.
