@@ -8,7 +8,11 @@ import (
 )
 
 func main() {
-	tmux := gotmux.DefaultTmux()
+	tmux, err := gotmux.DefaultTmux()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	sessions, err := tmux.ListSessions()
 	if err != nil {
 		log.Fatal(err)
