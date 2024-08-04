@@ -16,6 +16,9 @@ go get github.com/GianlucaP106/gotmux
 
 This library aims to be feature complete with tmux. Currently not all features are supported but they are planned to be impelemented. Contributions are also welcome, see CONTRIBUTING.
 
+## Documentation
+- [pkg.go.dev](https://pkg.go.dev/github.com/GianlucaP106/gotmux/gotmux)
+
 ## Usage
 
 ### Basic example
