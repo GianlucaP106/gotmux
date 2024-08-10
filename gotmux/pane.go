@@ -212,6 +212,66 @@ func (p *Pane) ChooseTree(op *ChooseTreeOptions) error {
 	return nil
 }
 
+// Capture pane command options.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#capture-pane
+type CaptureOptions struct {
+	EscTxtNBgAttr    bool
+	EscNonPrintables bool
+	IgnoreTrailing   bool
+	PreserveTrailing bool
+	PreserveAndJoin  bool
+}
+
+// Captures the content of the pane
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#capture-pane
+func (p *Pane) CapturePane(op *CaptureOptions) (string, error) {
+	q := p.tmux.query().
+		cmd("capture-pane").
+		fargs("-t", p.Id).
+		fargs("-p")
+
+	if op != nil {
+		if op.EscTxtNBgAttr {
+			q.fargs("-e")
+		}
+
+		if op.EscNonPrintables {
+			q.fargs("-C")
+		}
+
+		if op.IgnoreTrailing {
+			q.fargs("-T")
+		}
+
+		if op.PreserveTrailing {
+			q.fargs("-N")
+		}
+
+		if op.PreserveTrailing {
+			q.fargs("-J")
+		}
+	}
+
+	o, err := q.run()
+	if err != nil {
+		return "", errors.New("failed to capture pane")
+	}
+
+	return o.result, nil
+}
+
+// Captures the pane with background and text atrributes escaped.
+// Shorthand for `CapturePane`.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#capture-pane
+func (p *Pane) Capture() (string, error) {
+	return p.CapturePane(&CaptureOptions{
+		EscTxtNBgAttr: true,
+	})
+}
+
 // Sets the pane variables in the query.
 func (q *query) paneVars() *query {
 	return q.vars(
