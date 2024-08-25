@@ -103,7 +103,8 @@ func (t *Tmux) HasSession(session string) bool {
 }
 
 // Gets a session by name.
-// Filters throught the sessions to find one with matching name.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#session_name
 func (t *Tmux) GetSessionByName(name string) (*Session, error) {
 	sessions, err := t.ListSessions()
 	if err != nil {
@@ -113,6 +114,24 @@ func (t *Tmux) GetSessionByName(name string) (*Session, error) {
 	for _, s := range sessions {
 		if s.Name == name {
 			return s, nil
+		}
+	}
+
+	return nil, nil
+}
+
+// Gets a client by tty.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#client_tty
+func (t *Tmux) GetClientByTty(tty string) (*Client, error) {
+	clients, err := t.ListClients()
+	if err != nil {
+		return nil, err
+	}
+
+	for _, c := range clients {
+		if c.Tty == tty {
+			return c, nil
 		}
 	}
 
@@ -273,7 +292,9 @@ func (t *Tmux) ListAllPanes() ([]*Pane, error) {
 	return out, nil
 }
 
-// Returns the window with the given Id
+// Returns the window with the given Id.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#window_id
 func (t *Tmux) GetWindowById(id string) (*Window, error) {
 	windows, err := t.ListAllWindows()
 	if err != nil {
@@ -289,7 +310,9 @@ func (t *Tmux) GetWindowById(id string) (*Window, error) {
 	return nil, nil
 }
 
-// Returns the pane with the given Id
+// Returns the pane with the given Id.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#pane_id
 func (t *Tmux) GetPaneById(id string) (*Pane, error) {
 	panes, err := t.ListAllPanes()
 	if err != nil {

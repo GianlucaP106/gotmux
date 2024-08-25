@@ -186,6 +186,57 @@ func (w *Window) GetPaneByIndex(idx int) (*Pane, error) {
 	return nil, nil
 }
 
+// Lists the sessions linked to this window.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#window_linked_sessions_list
+func (w *Window) ListLinkedSessions() ([]*Session, error) {
+	out := make([]*Session, 0)
+	for _, s := range w.LinkedSessionsList {
+		session, err := w.tmux.GetSessionByName(s)
+		if err != nil {
+			return nil, err
+		}
+
+		out = append(out, session)
+	}
+
+	return out, nil
+}
+
+// List the sessions on which this window is active.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#window_active_sessions_list
+func (w *Window) ListActiveSessions() ([]*Session, error) {
+	out := make([]*Session, 0)
+	for _, s := range w.ActiveSessionsList {
+		session, err := w.tmux.GetSessionByName(s)
+		if err != nil {
+			return nil, err
+		}
+
+		out = append(out, session)
+	}
+
+	return out, nil
+}
+
+// List the clients viewing this window.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#window_active_clients_list
+func (w *Window) ListActiveClients() ([]*Client, error) {
+	out := make([]*Client, 0)
+	for _, c := range w.ActiveClientsList {
+		client, err := w.tmux.GetClientByTty(c)
+		if err != nil {
+			return nil, err
+		}
+
+		out = append(out, client)
+	}
+
+	return out, nil
+}
+
 // Sets the window variables in the query.
 func (q *query) windowVars() *query {
 	return q.vars(

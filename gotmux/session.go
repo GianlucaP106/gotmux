@@ -171,6 +171,28 @@ func (s *Session) ListWindows() ([]*Window, error) {
 	return out, nil
 }
 
+// List panes for this session.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#list-panes
+func (s *Session) ListPanes() ([]*Pane, error) {
+	o, err := s.tmux.query().
+		cmd("list-panes").
+		fargs("-s", "-t", s.Name).
+		paneVars().
+		run()
+	if err != nil {
+		return nil, errors.New("failed to list panes")
+	}
+
+	out := make([]*Pane, 0)
+	for _, item := range o.collect() {
+		pane := item.toPane(s.tmux)
+		out = append(out, pane)
+	}
+
+	return out, nil
+}
+
 // Gets a window by index in this session.
 func (s *Session) GetWindowByIndex(idx int) (*Window, error) {
 	windows, err := s.ListWindows()
