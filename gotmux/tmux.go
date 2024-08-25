@@ -46,6 +46,22 @@ func DefaultTmux() (*Tmux, error) {
 	}, nil
 }
 
+// Get server information.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#Variable
+func (t *Tmux) GetServerInformation() (*Server, error) {
+	o, err := t.query().
+		cmd("display-message").
+		serverVars().
+		run()
+	if err != nil {
+		return nil, err
+	}
+
+	server := o.one().toServer(t)
+	return server, nil
+}
+
 // List all clients.
 //
 // Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#list-clients
