@@ -178,6 +178,14 @@ func (p *Pane) SplitWindow(op *SplitWindowOptions) error {
 	return nil
 }
 
+// Split the window (pane).
+// Shorthand for 'SplitWindow' but with default options.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#split-window
+func (p *Pane) Split() error {
+	return p.SplitWindow(nil)
+}
+
 // Choose tree options.
 //
 // Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#choose-tree
