@@ -82,7 +82,11 @@ func (q *query) prepare() *exec.Cmd {
 	}()
 
 	if vars != "" {
-		query = append(query, "-F", vars)
+		if q.command[0] == "display-message" {
+			query = append(query, "-p", vars)
+		} else {
+			query = append(query, "-F", vars)
+		}
 	}
 
 	query = append(query, q.pArgs...)
