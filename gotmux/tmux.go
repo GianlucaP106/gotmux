@@ -344,6 +344,26 @@ func (t *Tmux) GetPaneById(id string) (*Pane, error) {
 	return nil, nil
 }
 
+// Returns a currently active client.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#display-message
+func (t *Tmux) GetClient() (*Client, error) {
+	o, err := t.query().
+		cmd("display-message").
+		clientVars().
+		run()
+	if err != nil {
+		return nil, err
+	}
+
+	client := o.one().toClient(t)
+	if client.Height == 0 {
+		return nil, nil
+	}
+
+	return client, nil
+}
+
 // Adds socket argument.
 func (t *Tmux) query() *query {
 	q := newQuery()
