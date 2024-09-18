@@ -1,6 +1,6 @@
 # gotmux
 
-Gotmux is a library to interact with tmux. It communicates using the tmux CLI. It aims to be a completed library for tmux.
+Gotmux is a comprehensive library designed to interact with tmux, communicating through the tmux CLI and aiming to offer complete functionality for tmux integration.
 
 ## Installation
 
