@@ -61,12 +61,12 @@ type Pane struct {
 
 // Pane relative position.
 //
-// TODO: Reference:
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#select-pane
 type PanePosition string
 
 // Enumeration of pane positions.
 //
-// TODO: Reference:
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#select-pane
 const (
 	PanePositionUp    PanePosition = "-U"
 	PanePositionRight PanePosition = "-R"

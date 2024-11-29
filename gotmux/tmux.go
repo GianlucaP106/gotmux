@@ -364,6 +364,18 @@ func (t *Tmux) GetClient() (*Client, error) {
 	return client, nil
 }
 
+// Runs a tmux command. For custom commands that the API does not cover.
+func (t *Tmux) Command(cmd ...string) (string, error) {
+	o, err := t.query().
+		cmd(cmd...).
+		run()
+	if err != nil {
+		return "", errors.New("failed to run command")
+	}
+
+	return o.result, nil
+}
+
 // Adds socket argument.
 func (t *Tmux) query() *query {
 	q := newQuery()
