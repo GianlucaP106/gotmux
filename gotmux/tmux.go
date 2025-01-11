@@ -22,7 +22,7 @@ type Tmux struct {
 // Initializes the tmux client with a socket path.
 // Entry point to the library.
 func NewTmux(socketPath string) (*Tmux, error) {
-	if !isTmuxInstalled() {
+	if !IsInstalled() {
 		return nil, errors.New("tmux is not installed on the system")
 	}
 	t := &Tmux{}
@@ -38,7 +38,7 @@ func NewTmux(socketPath string) (*Tmux, error) {
 // Initializes the tmux client with default socket.
 // Entry point to the library.
 func DefaultTmux() (*Tmux, error) {
-	if !isTmuxInstalled() {
+	if !IsInstalled() {
 		return nil, errors.New("tmux is not installed on the system")
 	}
 	return &Tmux{
@@ -413,7 +413,7 @@ func checkSessionName(name string) bool {
 }
 
 // Returns true if tmux is installed on the system otherwise false.
-func isTmuxInstalled() bool {
+func IsInstalled() bool {
 	_, err := exec.LookPath("tmux")
 	return err == nil
 }
