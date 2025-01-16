@@ -2,27 +2,61 @@
 
 A comprehensive library designed to interact with tmux, communicating through the tmux CLI and aiming to offer complete functionality for tmux integration.
 
+## Requirements
+
+- Go 1.22.3 or higher
+- tmux installed on the system
+
 ## Installation
 
 ```bash
 go get github.com/GianlucaP106/gotmux
 ```
 
-## Dependencies
-
-- tmux
-
 ## Features
 
-This library aims to be feature complete with tmux. Currently not all features are supported but they are planned to be impelemented. Contributions are also welcome.
+This library provides a comprehensive Go interface to tmux, offering:
+
+### Core Features
+
+- **Complete Session Management**
+  - Create, rename, and delete sessions
+  - Attach/detach from sessions
+  - List and query session information
+  - Group session management
+  - Session activity monitoring
+- **Window Operations**
+  - Create and manage windows
+  - Move windows between sessions
+  - Set window layouts
+  - Navigate between windows
+  - Window layout customization
+  - Window activity flags
+- **Pane Control**
+  - Split panes horizontally or vertically
+  - Resize and rearrange panes
+  - Capture pane content
+  - Pane synchronization
+  - Command execution in panes
+- **Server & Client Information**
+  - Query server status and version
+  - List connected clients
+  - Get terminal information
+  - Monitor client activity
+  - Socket management
+
+### Implementation Status
+
+This library aims to be feature complete with tmux. Currently not all features are supported but they are planned to be implemented. Contributions are welcome.
 
 ## Documentation
 
 - [pkg.go.dev](https://pkg.go.dev/github.com/GianlucaP106/gotmux/gotmux)
+- [Examples Directory](https://github.com/GianlucaP106/gotmux/tree/main/examples)
 
 ## Usage
 
-### Basic example
+### Basic Example
 
 ```go
 import (
@@ -66,17 +100,97 @@ func main() {
 }
 ```
 
-#### See the list of [examples](https://github.com/GianlucaP106/gotmux/tree/main/examples)
+### Advanced Examples
 
-# Features
+#### Session Management
 
-This library aims to support all tmux feature, but currently not everything is impelemented.
+```go
+func main() {
+    tmux, err := gotmux.DefaultTmux()
+    if err != nil {
+        log.Fatal(err)
+    }
 
-### Impelemented features
+    // Create a named session with specific directory
+    session, err := tmux.NewSession(&gotmux.SessionOptions{
+        StartDirectory: "/home",
+        Name:          "somename",
+    })
+    if err != nil {
+        log.Fatal(err)
+    }
 
-#### Full session, window and pane management (with helper methods)
+    // Attach to the session
+    err = session.Attach()
+    if err != nil {
+        log.Fatal(err)
+    }
+}
+```
 
-Create, update, delete and view sessions, windows and panes in an object oriented fashion. For example:
+#### Window and Pane Management
+
+```go
+func main() {
+    tmux, err := gotmux.DefaultTmux()
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    session, err := tmux.New()
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    // Create and manage windows
+    window, err := session.New()
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    // Get and split panes
+    pane, err := window.GetPaneByIndex(0)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    err = pane.Split()
+    if err != nil {
+        log.Fatal(err)
+    }
+}
+```
+
+#### Listing and Information
+
+```go
+func main() {
+    tmux, err := gotmux.DefaultTmux()
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    // List clients
+    clients, err := tmux.ListClients()
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    for _, c := range clients {
+        fmt.Println(c.Tty, c.Session)
+    }
+
+    // Get server information
+    server, err := tmux.GetServerInformation()
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Println(server.Version)
+}
+```
+
+#### Window Layout Management
 
 ```go
 func main() {
@@ -95,21 +209,27 @@ func main() {
         log.Fatal(err)
     }
 
-    pane, err := window.GetPaneByIndex(0)
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    err = pane.Split()
+    // Available layouts:
+    // - WindowLayoutEvenHorizontal
+    // - WindowLayoutEvenVertical
+    // - WindowLayoutMainVertical
+    // - WindowLayoutTiled
+    err = window.SelectLayout(gotmux.WindowLayoutEvenVertical)
     if err != nil {
         log.Fatal(err)
     }
 }
 ```
 
-#### View all data
+See the complete list of [examples](https://github.com/GianlucaP106/gotmux/tree/main/examples)
 
-The returned objects contain ALL attributes provided by tmux. For example, this is the session type:
+## API Overview
+
+### Core Types
+
+All types provide comprehensive access to tmux attributes:
+
+#### Session Type
 
 ```go
 type Session struct {
@@ -139,47 +259,42 @@ type Session struct {
 }
 ```
 
-You can refer to the tmux documentation to fully understand what these attributes represent (<https://man.openbsd.org/OpenBSD-current/man1/tmux.1#Variable>).
+### Common Operations
 
-#### Get server and client information
+#### Session Operations
 
-View information about the tmux server and active clients (terminals). For example:
+- `New()` - Create a new session
+- `Attach()` - Attach to a session
+- `Kill()` - Kill a session
+- `Rename()` - Rename a session
+- `ListWindows()` - List windows in a session
 
-- Clients
+#### Window Operations
+
+- `New()` - Create a new window
+- `Kill()` - Kill a window
+- `Move()` - Move a window
+- `SelectLayout()` - Select window layout
+- `ListPanes()` - List panes in a window
+
+#### Pane Operations
+
+- `Split()` - Split a pane
+- `Kill()` - Kill a pane
+- `Capture()` - Capture pane content
+- `Select()` - Select a pane
+
+## Error Handling
+
+The library uses Go's standard error handling patterns. All operations that can fail return an error as their last return value:
 
 ```go
-func main() {
-    tmux, err := gotmux.DefaultTmux()
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    clients, err := tmux.ListClients()
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    for _, c := range clients {
-        fmt.Println(c.Tty, c.Session)
-    }
-}
-
-```
-
-- Server
-
-```go
-func main() {
-    tmux, err := gotmux.DefaultTmux()
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    server, err := tmux.GetServerInformation()
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    fmt.Println(server.Version)
+session, err := tmux.New()
+if err != nil {
+    // Handle error
 }
 ```
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
