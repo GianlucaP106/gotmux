@@ -155,6 +155,11 @@ func (q *queryOutput) one() queryResult {
 	return q.collect()[0]
 }
 
+// Returns the raw result.
+func (q *queryOutput) raw() string {
+	return q.result
+}
+
 // Represents a query result.
 type queryResult map[string]string
 

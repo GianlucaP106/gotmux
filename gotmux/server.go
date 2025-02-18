@@ -14,10 +14,9 @@ type Server struct {
 	Pid       int32
 	Socket    *Socket
 	StartTime string
-	// StartTime  time.Time
-	Uid     string
-	User    string
-	Version string
+	Uid       string
+	User      string
+	Version   string
 
 	tmux *Tmux
 }

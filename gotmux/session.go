@@ -290,6 +290,35 @@ func (s *Session) PreviousWindow() error {
 	return nil
 }
 
+// Sets an option with a given key.
+// Note that custom options must begin with '@'.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#set-option
+func (s *Session) SetOption(key, option string) error {
+	return s.tmux.SetOption(s.Name, key, option, "")
+}
+
+// Retrieves an option from this session.
+//
+// https://man.openbsd.org/OpenBSD-current/man1/tmux.1#show-options
+func (s *Session) Option(key string) (*Option, error) {
+	return s.tmux.Option(s.Name, key, "")
+}
+
+// Retrieves all options in this session.
+//
+// https://man.openbsd.org/OpenBSD-current/man1/tmux.1#show-options
+func (s *Session) Options() ([]*Option, error) {
+	return s.tmux.Options(s.Name, "")
+}
+
+// Deletes an option from this session.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#set-option
+func (s *Session) DeleteOption(key string) error {
+	return s.tmux.DeleteOption(s.Name, key, "")
+}
+
 // Sets the session variables in the query.
 func (q *query) sessionVars() *query {
 	return q.vars(

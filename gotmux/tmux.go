@@ -136,6 +136,13 @@ func (t *Tmux) GetSessionByName(name string) (*Session, error) {
 	return nil, nil
 }
 
+// Gets a session by name. Shorthand for `GetSessionByName`.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#session_name
+func (t *Tmux) Session(name string) (*Session, error) {
+	return t.GetSessionByName(name)
+}
+
 // Gets a client by tty.
 //
 // Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#client_tty
@@ -362,6 +369,87 @@ func (t *Tmux) GetClient() (*Client, error) {
 	}
 
 	return client, nil
+}
+
+// Sets an option at the target with given key.
+// level can be one of:
+//
+//	-p (pane), -w (window), -s (server) or empty (session)
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#set-option
+func (t *Tmux) SetOption(target, key, option, level string) error {
+	q := t.query().
+		cmd("set-option")
+	if level != "" {
+		q.fargs(level)
+	}
+	q.fargs("-t", target).
+		pargs(key, option)
+
+	_, err := q.run()
+	if err != nil {
+		return errors.New("failed to set option")
+	}
+
+	return nil
+}
+
+// Retrieves an option.
+//
+// https://man.openbsd.org/OpenBSD-current/man1/tmux.1#show-options
+func (t *Tmux) Option(target, key, level string) (*Option, error) {
+	q := t.query().
+		cmd("show-option")
+	if level != "" {
+		q.fargs(level)
+	}
+	q.fargs("-t", target).
+		fargs("-v", key)
+
+	o, err := q.run()
+	if err != nil {
+		return nil, errors.New("failed to retrieve option")
+	}
+
+	return newOption(key, o.raw()), nil
+}
+
+// Retrieves all options with provided params.
+//
+// https://man.openbsd.org/OpenBSD-current/man1/tmux.1#show-options
+func (t *Tmux) Options(target, level string) ([]*Option, error) {
+	q := t.query().cmd("show-options")
+	if level != "" {
+		q.fargs(level)
+	}
+	q.fargs("-t", target)
+
+	o, err := q.run()
+	if err != nil {
+		return nil, errors.New("failed to retrieve options")
+	}
+
+	return o.toOptions(), nil
+}
+
+// Deletes an option from this session.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#set-option
+func (t *Tmux) DeleteOption(target, key, level string) error {
+	q := t.query().
+		cmd("set-option")
+	if level != "" {
+		q.fargs(level)
+	}
+	q.fargs("-t", target).
+		fargs("-u", key)
+
+	_, err := q.run()
+	if err != nil {
+		return errors.New("failed to delete option")
+	}
+
+	return nil
 }
 
 // Runs a tmux command. For custom commands that the API does not cover.

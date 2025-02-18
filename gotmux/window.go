@@ -237,6 +237,35 @@ func (w *Window) ListActiveClients() ([]*Client, error) {
 	return out, nil
 }
 
+// Sets an option with a given key.
+// Note that custom options must begin with '@'.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#set-option
+func (w *Window) SetOption(key, option string) error {
+	return w.tmux.SetOption(w.Id, key, option, "-w")
+}
+
+// Retrieves an option from this window.
+//
+// https://man.openbsd.org/OpenBSD-current/man1/tmux.1#show-options
+func (w *Window) Option(key string) (*Option, error) {
+	return w.tmux.Option(w.Id, key, "-w")
+}
+
+// Retrieves all options in this window.
+//
+// https://man.openbsd.org/OpenBSD-current/man1/tmux.1#show-options
+func (w *Window) Options() ([]*Option, error) {
+	return w.tmux.Options(w.Id, "-w")
+}
+
+// Deletes an option from this window.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#set-option
+func (w *Window) DeleteOption(key string) error {
+	return w.tmux.DeleteOption(w.Id, key, "-w")
+}
+
 // Sets the window variables in the query.
 func (q *query) windowVars() *query {
 	return q.vars(

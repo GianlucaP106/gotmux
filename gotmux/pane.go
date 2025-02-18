@@ -280,6 +280,35 @@ func (p *Pane) Capture() (string, error) {
 	})
 }
 
+// Sets an option with a given key.
+// Note that custom options must begin with '@'.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#set-option
+func (p *Pane) SetOption(key, option string) error {
+	return p.tmux.SetOption(p.Id, key, option, "-p")
+}
+
+// Retrieves an option from this pane.
+//
+// https://man.openbsd.org/OpenBSD-current/man1/tmux.1#show-options
+func (p *Pane) Option(key string) (*Option, error) {
+	return p.tmux.Option(p.Id, key, "-p")
+}
+
+// Retrieves all options in this pane.
+//
+// https://man.openbsd.org/OpenBSD-current/man1/tmux.1#show-options
+func (p *Pane) Options() ([]*Option, error) {
+	return p.tmux.Options(p.Id, "-p")
+}
+
+// Deletes an option from this pane.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#set-option
+func (p *Pane) DeleteOption(key string) error {
+	return p.tmux.DeleteOption(p.Id, key, "-p")
+}
+
 // Sets the pane variables in the query.
 func (q *query) paneVars() *query {
 	return q.vars(
