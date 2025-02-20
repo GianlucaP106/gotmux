@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Gianluca Piccirillo
+// Copyright (c) Gianluca Piccirillo
 // This software is licensed under the MIT License.
 // See the LICENSE file in the root directory for more information.
 
@@ -6,8 +6,6 @@ package gotmux
 
 import (
 	"strconv"
-
-	"github.com/GianlucaP106/gotmux/gotmux/vars"
 )
 
 // Tmux client object.
@@ -50,59 +48,59 @@ func (c *Client) GetSession() (*Session, error) {
 // Sets the client variables in the query.
 func (q *query) clientVars() *query {
 	return q.vars(
-		vars.ClientActivity,
-		vars.ClientCellHeight,
-		vars.ClientCellWidth,
-		vars.ClientControlMode,
-		vars.ClientCreated,
-		vars.ClientDiscarded,
-		vars.ClientFlags,
-		vars.ClientHeight,
-		vars.ClientKeyTable,
-		vars.ClientLastSession,
-		vars.ClientName,
-		vars.ClientPid,
-		vars.ClientPrefix,
-		vars.ClientReadonly,
-		vars.ClientSession,
-		vars.ClientTermname,
-		vars.ClientTermfeatures,
-		vars.ClientTermtype,
-		vars.ClientTty,
-		vars.ClientUid,
-		vars.ClientUser,
-		vars.ClientUtf8,
-		vars.ClientWidth,
-		vars.ClientWritten,
+		varClientActivity,
+		varClientCellHeight,
+		varClientCellWidth,
+		varClientControlMode,
+		varClientCreated,
+		varClientDiscarded,
+		varClientFlags,
+		varClientHeight,
+		varClientKeyTable,
+		varClientLastSession,
+		varClientName,
+		varClientPid,
+		varClientPrefix,
+		varClientReadonly,
+		varClientSession,
+		varClientTermname,
+		varClientTermfeatures,
+		varClientTermtype,
+		varClientTty,
+		varClientUid,
+		varClientUser,
+		varClientUtf8,
+		varClientWidth,
+		varClientWritten,
 	)
 }
 
 // Converts a QueryResult to a Client.
 func (q queryResult) toClient(t *Tmux) *Client {
-	activity := q.get(vars.ClientActivity)
-	cellHeight, _ := strconv.Atoi(q.get(vars.ClientCellHeight))
-	cellWidth, _ := strconv.Atoi(q.get(vars.ClientCellWidth))
-	controlMode := isOne(q.get(vars.ClientControlMode))
-	created := q.get(vars.ClientCreated)
-	discarded := q.get(vars.ClientDiscarded)
-	flags := q.get(vars.ClientFlags)
-	height, _ := strconv.Atoi(q.get(vars.ClientHeight))
-	keyTable := q.get(vars.ClientKeyTable)
-	lastSession := q.get(vars.ClientLastSession)
-	name := q.get(vars.ClientName)
-	pid, _ := strconv.Atoi(q.get(vars.ClientPid))
-	prefix := isOne(q.get(vars.ClientPrefix))
-	readonly := isOne(q.get(vars.ClientReadonly))
-	session := q.get(vars.ClientSession)
-	termname := q.get(vars.ClientTermname)
-	termfeatures := q.get(vars.ClientTermfeatures)
-	termtype := q.get(vars.ClientTermtype)
-	tty := q.get(vars.ClientTty)
-	uid, _ := strconv.Atoi(q.get(vars.ClientUid))
-	user := q.get(vars.ClientUser)
-	utf8 := isOne(q.get(vars.ClientUtf8))
-	width, _ := strconv.Atoi(q.get(vars.ClientWidth))
-	written := q.get(vars.ClientWritten)
+	activity := q.get(varClientActivity)
+	cellHeight, _ := strconv.Atoi(q.get(varClientCellHeight))
+	cellWidth, _ := strconv.Atoi(q.get(varClientCellWidth))
+	controlMode := isOne(q.get(varClientControlMode))
+	created := q.get(varClientCreated)
+	discarded := q.get(varClientDiscarded)
+	flags := q.get(varClientFlags)
+	height, _ := strconv.Atoi(q.get(varClientHeight))
+	keyTable := q.get(varClientKeyTable)
+	lastSession := q.get(varClientLastSession)
+	name := q.get(varClientName)
+	pid, _ := strconv.Atoi(q.get(varClientPid))
+	prefix := isOne(q.get(varClientPrefix))
+	readonly := isOne(q.get(varClientReadonly))
+	session := q.get(varClientSession)
+	termname := q.get(varClientTermname)
+	termfeatures := q.get(varClientTermfeatures)
+	termtype := q.get(varClientTermtype)
+	tty := q.get(varClientTty)
+	uid, _ := strconv.Atoi(q.get(varClientUid))
+	user := q.get(varClientUser)
+	utf8 := isOne(q.get(varClientUtf8))
+	width, _ := strconv.Atoi(q.get(varClientWidth))
+	written := q.get(varClientWritten)
 
 	c := &Client{
 		Activity:     activity,

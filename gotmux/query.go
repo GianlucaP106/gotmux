@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Gianluca Piccirillo
+// Copyright (c) Gianluca Piccirillo
 // This software is licensed under the MIT License.
 // See the LICENSE file in the root directory for more information.
 
@@ -153,6 +153,11 @@ func (q *queryOutput) collect() []queryResult {
 // Returns one element from the result.
 func (q *queryOutput) one() queryResult {
 	return q.collect()[0]
+}
+
+// Returns the raw result.
+func (q *queryOutput) raw() string {
+	return q.result
 }
 
 // Represents a query result.
