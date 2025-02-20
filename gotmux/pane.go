@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Gianluca Piccirillo
+// Copyright (c) Gianluca Piccirillo
 // This software is licensed under the MIT License.
 // See the LICENSE file in the root directory for more information.
 
@@ -8,8 +8,6 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
-
-	"github.com/GianlucaP106/gotmux/gotmux/vars"
 )
 
 // Tmux pane object.
@@ -312,89 +310,89 @@ func (p *Pane) DeleteOption(key string) error {
 // Sets the pane variables in the query.
 func (q *query) paneVars() *query {
 	return q.vars(
-		vars.PaneActive,
-		vars.PaneAtBottom,
-		vars.PaneAtLeft,
-		vars.PaneAtRight,
-		vars.PaneAtTop,
-		vars.PaneBg,
-		vars.PaneBottom,
-		vars.PaneCurrentCommand,
-		vars.PaneCurrentPath,
-		vars.PaneDead,
-		vars.PaneDeadSignal,
-		vars.PaneDeadStatus,
-		vars.PaneDeadTime,
-		vars.PaneFg,
-		vars.PaneFormat,
-		vars.PaneHeight,
-		vars.PaneId,
-		vars.PaneInMode,
-		vars.PaneIndex,
-		vars.PaneInputOff,
-		vars.PaneLast,
-		vars.PaneLeft,
-		vars.PaneMarked,
-		vars.PaneMarkedSet,
-		vars.PaneMode,
-		vars.PanePath,
-		vars.PanePid,
-		vars.PanePipe,
-		vars.PaneRight,
-		vars.PaneSearchString,
-		vars.PaneStartCommand,
-		vars.PaneStartPath,
-		vars.PaneSynchronized,
-		vars.PaneTabs,
-		vars.PaneTitle,
-		vars.PaneTop,
-		vars.PaneTty,
-		vars.PaneUnseenChanges,
-		vars.PaneWidth,
+		varPaneActive,
+		varPaneAtBottom,
+		varPaneAtLeft,
+		varPaneAtRight,
+		varPaneAtTop,
+		varPaneBg,
+		varPaneBottom,
+		varPaneCurrentCommand,
+		varPaneCurrentPath,
+		varPaneDead,
+		varPaneDeadSignal,
+		varPaneDeadStatus,
+		varPaneDeadTime,
+		varPaneFg,
+		varPaneFormat,
+		varPaneHeight,
+		varPaneId,
+		varPaneInMode,
+		varPaneIndex,
+		varPaneInputOff,
+		varPaneLast,
+		varPaneLeft,
+		varPaneMarked,
+		varPaneMarkedSet,
+		varPaneMode,
+		varPanePath,
+		varPanePid,
+		varPanePipe,
+		varPaneRight,
+		varPaneSearchString,
+		varPaneStartCommand,
+		varPaneStartPath,
+		varPaneSynchronized,
+		varPaneTabs,
+		varPaneTitle,
+		varPaneTop,
+		varPaneTty,
+		varPaneUnseenChanges,
+		varPaneWidth,
 	)
 }
 
 // Converts a QueryResult to a pane.
 func (q queryResult) toPane(t *Tmux) *Pane {
-	active := isOne(q.get(vars.PaneActive))
-	atBottom := isOne(q.get(vars.PaneAtBottom))
-	atLeft := isOne(q.get(vars.PaneAtLeft))
-	atRight := isOne(q.get(vars.PaneAtRight))
-	atTop := isOne(q.get(vars.PaneAtTop))
-	bg := q.get(vars.PaneBg)
-	bottom := q.get(vars.PaneBottom)
-	currentCommand := q.get(vars.PaneCurrentCommand)
-	currentPath := q.get(vars.PaneCurrentPath)
-	dead := isOne(q.get(vars.PaneDead))
-	deadSignal, _ := strconv.Atoi(q.get(vars.PaneDeadSignal))
-	deadStatus, _ := strconv.Atoi(q.get(vars.PaneDeadStatus))
-	deadTime := q.get(vars.PaneDeadTime)
-	fg := q.get(vars.PaneFg)
-	format := isOne(q.get(vars.PaneFormat))
-	height, _ := strconv.Atoi(q.get(vars.PaneHeight))
-	id := q.get(vars.PaneId)
-	inMode := isOne(q.get(vars.PaneInMode))
-	index, _ := strconv.Atoi(q.get(vars.PaneIndex))
-	inputOff := isOne(q.get(vars.PaneInputOff))
-	last := isOne(q.get(vars.PaneLast))
-	left := q.get(vars.PaneLeft)
-	marked := isOne(q.get(vars.PaneMarked))
-	markedSet := isOne(q.get(vars.PaneMarkedSet))
-	mode := q.get(vars.PaneMode)
-	path := q.get(vars.PanePath)
-	pid, _ := strconv.Atoi(q.get(vars.PanePid))
-	pipe := isOne(q.get(vars.PanePipe))
-	right := q.get(vars.PaneRight)
-	searchString := q.get(vars.PaneSearchString)
-	startCommand := q.get(vars.PaneStartCommand)
-	startPath := q.get(vars.PaneStartPath)
-	synchronized := isOne(q.get(vars.PaneSynchronized))
-	tabs := q.get(vars.PaneTabs)
-	title := q.get(vars.PaneTitle)
-	top := q.get(vars.PaneTop)
-	tty := q.get(vars.PaneTty)
-	unseenChanges := isOne(q.get(vars.PaneUnseenChanges))
-	width, _ := strconv.Atoi(q.get(vars.PaneWidth))
+	active := isOne(q.get(varPaneActive))
+	atBottom := isOne(q.get(varPaneAtBottom))
+	atLeft := isOne(q.get(varPaneAtLeft))
+	atRight := isOne(q.get(varPaneAtRight))
+	atTop := isOne(q.get(varPaneAtTop))
+	bg := q.get(varPaneBg)
+	bottom := q.get(varPaneBottom)
+	currentCommand := q.get(varPaneCurrentCommand)
+	currentPath := q.get(varPaneCurrentPath)
+	dead := isOne(q.get(varPaneDead))
+	deadSignal, _ := strconv.Atoi(q.get(varPaneDeadSignal))
+	deadStatus, _ := strconv.Atoi(q.get(varPaneDeadStatus))
+	deadTime := q.get(varPaneDeadTime)
+	fg := q.get(varPaneFg)
+	format := isOne(q.get(varPaneFormat))
+	height, _ := strconv.Atoi(q.get(varPaneHeight))
+	id := q.get(varPaneId)
+	inMode := isOne(q.get(varPaneInMode))
+	index, _ := strconv.Atoi(q.get(varPaneIndex))
+	inputOff := isOne(q.get(varPaneInputOff))
+	last := isOne(q.get(varPaneLast))
+	left := q.get(varPaneLeft)
+	marked := isOne(q.get(varPaneMarked))
+	markedSet := isOne(q.get(varPaneMarkedSet))
+	mode := q.get(varPaneMode)
+	path := q.get(varPanePath)
+	pid, _ := strconv.Atoi(q.get(varPanePid))
+	pipe := isOne(q.get(varPanePipe))
+	right := q.get(varPaneRight)
+	searchString := q.get(varPaneSearchString)
+	startCommand := q.get(varPaneStartCommand)
+	startPath := q.get(varPaneStartPath)
+	synchronized := isOne(q.get(varPaneSynchronized))
+	tabs := q.get(varPaneTabs)
+	title := q.get(varPaneTitle)
+	top := q.get(varPaneTop)
+	tty := q.get(varPaneTty)
+	unseenChanges := isOne(q.get(varPaneUnseenChanges))
+	width, _ := strconv.Atoi(q.get(varPaneWidth))
 
 	p := &Pane{
 		Active:         active,

@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Gianluca Piccirillo
+// Copyright (c) Gianluca Piccirillo
 // This software is licensed under the MIT License.
 // See the LICENSE file in the root directory for more information.
 
@@ -8,8 +8,6 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
-
-	"github.com/GianlucaP106/gotmux/gotmux/vars"
 )
 
 // Tmux window object.
@@ -269,79 +267,79 @@ func (w *Window) DeleteOption(key string) error {
 // Sets the window variables in the query.
 func (q *query) windowVars() *query {
 	return q.vars(
-		vars.WindowActive,
-		vars.WindowActiveClients,
-		vars.WindowActiveClientsList,
-		vars.WindowActiveSessions,
-		vars.WindowActiveSessionsList,
-		vars.WindowActivity,
-		vars.WindowActivityFlag,
-		vars.WindowBellFlag,
-		vars.WindowBigger,
-		vars.WindowCellHeight,
-		vars.WindowCellWidth,
-		vars.WindowEndFlag,
-		vars.WindowFlags,
-		vars.WindowFormat,
-		vars.WindowHeight,
-		vars.WindowId,
-		vars.WindowIndex,
-		vars.WindowLastFlag,
-		vars.WindowLayout,
-		vars.WindowLinked,
-		vars.WindowLinkedSessions,
-		vars.WindowLinkedSessionsList,
-		vars.WindowMarkedFlag,
-		vars.WindowName,
-		vars.WindowOffsetX,
-		vars.WindowOffsetY,
-		vars.WindowPanes,
-		vars.WindowRawFlags,
-		vars.WindowSilenceFlag,
-		vars.WindowStackIndex,
-		vars.WindowStartFlag,
-		vars.WindowVisibleLayout,
-		vars.WindowWidth,
-		vars.WindowZoomedFlag,
+		varWindowActive,
+		varWindowActiveClients,
+		varWindowActiveClientsList,
+		varWindowActiveSessions,
+		varWindowActiveSessionsList,
+		varWindowActivity,
+		varWindowActivityFlag,
+		varWindowBellFlag,
+		varWindowBigger,
+		varWindowCellHeight,
+		varWindowCellWidth,
+		varWindowEndFlag,
+		varWindowFlags,
+		varWindowFormat,
+		varWindowHeight,
+		varWindowId,
+		varWindowIndex,
+		varWindowLastFlag,
+		varWindowLayout,
+		varWindowLinked,
+		varWindowLinkedSessions,
+		varWindowLinkedSessionsList,
+		varWindowMarkedFlag,
+		varWindowName,
+		varWindowOffsetX,
+		varWindowOffsetY,
+		varWindowPanes,
+		varWindowRawFlags,
+		varWindowSilenceFlag,
+		varWindowStackIndex,
+		varWindowStartFlag,
+		varWindowVisibleLayout,
+		varWindowWidth,
+		varWindowZoomedFlag,
 	)
 }
 
 // Converts a QueryResult to a Window.
 func (q queryResult) toWindow(t *Tmux) *Window {
-	active := isOne(q.get(vars.WindowActive))
-	activeClients, _ := strconv.Atoi(q.get(vars.WindowActiveClients))
-	activeClientsList := parseList(q.get(vars.WindowActiveClientsList))
-	activeSessions, _ := strconv.Atoi(q.get(vars.WindowActiveSessions))
-	activeSessionsList := parseList(q.get(vars.WindowActiveSessionsList))
-	activity := q.get(vars.WindowActivity)
-	activityFlag := isOne(q.get(vars.WindowActivityFlag))
-	bellFlag := isOne(q.get(vars.WindowBellFlag))
-	bigger := isOne(q.get(vars.WindowBigger))
-	cellHeight, _ := strconv.Atoi(q.get(vars.WindowCellHeight))
-	cellWidth, _ := strconv.Atoi(q.get(vars.WindowCellWidth))
-	endFlag := isOne(q.get(vars.WindowEndFlag))
-	flags := q.get(vars.WindowFlags)
-	format := isOne(q.get(vars.WindowFormat))
-	height, _ := strconv.Atoi(q.get(vars.WindowHeight))
-	id := q.get(vars.WindowId)
-	index, _ := strconv.Atoi(q.get(vars.WindowIndex))
-	lastFlag := isOne(q.get(vars.WindowLastFlag))
-	layout := q.get(vars.WindowLayout)
-	linked := isOne(q.get(vars.WindowLinked))
-	linkedSessions, _ := strconv.Atoi(q.get(vars.WindowLinkedSessions))
-	linkedSessionsList := parseList(q.get(vars.WindowLinkedSessionsList))
-	markedFlag := isOne(q.get(vars.WindowMarkedFlag))
-	name := q.get(vars.WindowName)
-	offsetX, _ := strconv.Atoi(q.get(vars.WindowOffsetX))
-	offsetY, _ := strconv.Atoi(q.get(vars.WindowOffsetY))
-	panes, _ := strconv.Atoi(q.get(vars.WindowPanes))
-	rawFlags := q.get(vars.WindowRawFlags)
-	silenceFlag, _ := strconv.Atoi(q.get(vars.WindowSilenceFlag))
-	stackIndex, _ := strconv.Atoi(q.get(vars.WindowStackIndex))
-	startFlag := isOne(q.get(vars.WindowStartFlag))
-	visibleLayout := q.get(vars.WindowVisibleLayout)
-	width, _ := strconv.Atoi(q.get(vars.WindowWidth))
-	zoomedFlag := isOne(q.get(vars.WindowZoomedFlag))
+	active := isOne(q.get(varWindowActive))
+	activeClients, _ := strconv.Atoi(q.get(varWindowActiveClients))
+	activeClientsList := parseList(q.get(varWindowActiveClientsList))
+	activeSessions, _ := strconv.Atoi(q.get(varWindowActiveSessions))
+	activeSessionsList := parseList(q.get(varWindowActiveSessionsList))
+	activity := q.get(varWindowActivity)
+	activityFlag := isOne(q.get(varWindowActivityFlag))
+	bellFlag := isOne(q.get(varWindowBellFlag))
+	bigger := isOne(q.get(varWindowBigger))
+	cellHeight, _ := strconv.Atoi(q.get(varWindowCellHeight))
+	cellWidth, _ := strconv.Atoi(q.get(varWindowCellWidth))
+	endFlag := isOne(q.get(varWindowEndFlag))
+	flags := q.get(varWindowFlags)
+	format := isOne(q.get(varWindowFormat))
+	height, _ := strconv.Atoi(q.get(varWindowHeight))
+	id := q.get(varWindowId)
+	index, _ := strconv.Atoi(q.get(varWindowIndex))
+	lastFlag := isOne(q.get(varWindowLastFlag))
+	layout := q.get(varWindowLayout)
+	linked := isOne(q.get(varWindowLinked))
+	linkedSessions, _ := strconv.Atoi(q.get(varWindowLinkedSessions))
+	linkedSessionsList := parseList(q.get(varWindowLinkedSessionsList))
+	markedFlag := isOne(q.get(varWindowMarkedFlag))
+	name := q.get(varWindowName)
+	offsetX, _ := strconv.Atoi(q.get(varWindowOffsetX))
+	offsetY, _ := strconv.Atoi(q.get(varWindowOffsetY))
+	panes, _ := strconv.Atoi(q.get(varWindowPanes))
+	rawFlags := q.get(varWindowRawFlags)
+	silenceFlag, _ := strconv.Atoi(q.get(varWindowSilenceFlag))
+	stackIndex, _ := strconv.Atoi(q.get(varWindowStackIndex))
+	startFlag := isOne(q.get(varWindowStartFlag))
+	visibleLayout := q.get(varWindowVisibleLayout)
+	width, _ := strconv.Atoi(q.get(varWindowWidth))
+	zoomedFlag := isOne(q.get(varWindowZoomedFlag))
 
 	w := &Window{
 		Active:             active,

@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Gianluca Piccirillo
+// Copyright (c) Gianluca Piccirillo
 // This software is licensed under the MIT License.
 // See the LICENSE file in the root directory for more information.
 
@@ -7,8 +7,6 @@ package gotmux
 import (
 	"errors"
 	"strconv"
-
-	"github.com/GianlucaP106/gotmux/gotmux/vars"
 )
 
 // Tmux session object.
@@ -322,53 +320,53 @@ func (s *Session) DeleteOption(key string) error {
 // Sets the session variables in the query.
 func (q *query) sessionVars() *query {
 	return q.vars(
-		vars.SessionActivity,
-		vars.SessionAlerts,
-		vars.SessionAttached,
-		vars.SessionAttachedList,
-		vars.SessionCreated,
-		vars.SessionFormat,
-		vars.SessionGroup,
-		vars.SessionGroupAttached,
-		vars.SessionGroupAttachedList,
-		vars.SessionGroupList,
-		vars.SessionGroupManyAttached,
-		vars.SessionGroupSize,
-		vars.SessionGrouped,
-		vars.SessionId,
-		vars.SessionLastAttached,
-		vars.SessionManyAttached,
-		vars.SessionMarked,
-		vars.SessionName,
-		vars.SessionPath,
-		vars.SessionStack,
-		vars.SessionWindows,
+		varSessionActivity,
+		varSessionAlerts,
+		varSessionAttached,
+		varSessionAttachedList,
+		varSessionCreated,
+		varSessionFormat,
+		varSessionGroup,
+		varSessionGroupAttached,
+		varSessionGroupAttachedList,
+		varSessionGroupList,
+		varSessionGroupManyAttached,
+		varSessionGroupSize,
+		varSessionGrouped,
+		varSessionId,
+		varSessionLastAttached,
+		varSessionManyAttached,
+		varSessionMarked,
+		varSessionName,
+		varSessionPath,
+		varSessionStack,
+		varSessionWindows,
 	)
 }
 
 // Converts a QueryResult to a Session.
 func (q queryResult) toSession(t *Tmux) *Session {
-	activity := q.get(vars.SessionActivity)
-	alerts := q.get(vars.SessionAlerts)
-	attached, _ := strconv.Atoi(q.get(vars.SessionAttached))
-	attachedList := parseList(q.get(vars.SessionAttachedList))
-	created := q.get(vars.SessionCreated)
-	format := isOne(q.get(vars.SessionFormat))
-	group := q.get(vars.SessionGroup)
-	groupAttached, _ := strconv.Atoi(q.get(vars.SessionGroupAttached))
-	groupAttachedList := parseList(q.get(vars.SessionGroupAttachedList))
-	groupList := parseList(q.get(vars.SessionGroupList))
-	groupManyAttached := isOne(q.get(vars.SessionGroupManyAttached))
-	groupSize, _ := strconv.Atoi(q.get(vars.SessionGroupSize))
-	grouped := isOne(q.get(vars.SessionGrouped))
-	id := q.get(vars.SessionId)
-	lastAttached := q.get(vars.SessionLastAttached)
-	manyAttached := isOne(q.get(vars.SessionManyAttached))
-	marked := isOne(q.get(vars.SessionMarked))
-	name := q.get(vars.SessionName)
-	path := q.get(vars.SessionPath)
-	stack := q.get(vars.SessionStack)
-	windows, _ := strconv.Atoi(q.get(vars.SessionWindows))
+	activity := q.get(varSessionActivity)
+	alerts := q.get(varSessionAlerts)
+	attached, _ := strconv.Atoi(q.get(varSessionAttached))
+	attachedList := parseList(q.get(varSessionAttachedList))
+	created := q.get(varSessionCreated)
+	format := isOne(q.get(varSessionFormat))
+	group := q.get(varSessionGroup)
+	groupAttached, _ := strconv.Atoi(q.get(varSessionGroupAttached))
+	groupAttachedList := parseList(q.get(varSessionGroupAttachedList))
+	groupList := parseList(q.get(varSessionGroupList))
+	groupManyAttached := isOne(q.get(varSessionGroupManyAttached))
+	groupSize, _ := strconv.Atoi(q.get(varSessionGroupSize))
+	grouped := isOne(q.get(varSessionGrouped))
+	id := q.get(varSessionId)
+	lastAttached := q.get(varSessionLastAttached)
+	manyAttached := isOne(q.get(varSessionManyAttached))
+	marked := isOne(q.get(varSessionMarked))
+	name := q.get(varSessionName)
+	path := q.get(varSessionPath)
+	stack := q.get(varSessionStack)
+	windows, _ := strconv.Atoi(q.get(varSessionWindows))
 
 	s := &Session{
 		Activity:          activity,
