@@ -6,6 +6,7 @@ package gotmux
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"os/exec"
@@ -22,6 +23,7 @@ type query struct {
 	pArgs     []string
 	command   []string
 	variables []string
+	out, err  io.Writer
 }
 
 // Returns a new newQuery.
@@ -108,12 +110,24 @@ func (q *query) run() (*queryOutput, error) {
 	return o, nil
 }
 
+func (q *query) pipeOut(out io.Writer) {
+	q.out = out
+}
+
+func (q *query) pipeErr(err io.Writer) {
+	q.err = err
+}
+
 // Runs the query and attaches to the terminal by redirecting.
 func (q *query) runTty() error {
 	cmd := q.prepare()
-	cmd.Stderr = os.Stderr
 	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
+	if q.out != nil {
+		cmd.Stdout = q.out
+	}
+	if q.err != nil {
+		cmd.Stderr = q.err
+	}
 	return cmd.Run()
 }
 
