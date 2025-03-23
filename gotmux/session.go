@@ -6,6 +6,7 @@ package gotmux
 
 import (
 	"errors"
+	"io"
 	"strconv"
 )
 
@@ -63,10 +64,14 @@ func (s *Session) ListClients() ([]*Client, error) {
 type AttachSessionOptions struct {
 	WorkingDir    string
 	DetachClients bool
+
+	// Stdout/Stderr will be redirected to these writers if set.
+	Output, Error io.Writer
 }
 
 // Attaches the current client to the session.
 // Since this requires a client, it will attach to the terminal by redirecting.
+// Provides the option to pipe output and error to a custom location.
 //
 // Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#attach-session
 func (s *Session) AttachSession(op *AttachSessionOptions) error {
@@ -82,6 +87,9 @@ func (s *Session) AttachSession(op *AttachSessionOptions) error {
 		if op.WorkingDir != "" {
 			q.fargs("-c", op.WorkingDir)
 		}
+
+		q.pipeOut(op.Output)
+		q.pipeErr(op.Error)
 	}
 
 	err := q.runTty()
