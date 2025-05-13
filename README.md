@@ -234,35 +234,6 @@ func main() {
 
 ---
 
-## 🔍 API Overview
-
-### 📌 Common Operations
-
-#### 🏗️ Session Operations
-
-- `New()` – Create a session
-- `Attach()` – Attach to a session
-- `Kill()` – Kill a session
-- `Rename()` – Rename a session
-- `ListWindows()` – List session windows
-
-#### 🖥️ Window Operations
-
-- `New()` – Create a window
-- `Kill()` – Kill a window
-- `Move()` – Move a window
-- `SelectLayout()` – Change layout
-- `ListPanes()` – List window panes
-
-#### 🔲 Pane Operations
-
-- `Split()` – Split a pane
-- `Kill()` – Kill a pane
-- `Capture()` – Capture pane content
-- `Select()` – Select a pane
-
----
-
 ## 📜 License
 
 This project is licensed under the **MIT License** – see the [LICENSE](LICENSE) file for details.
