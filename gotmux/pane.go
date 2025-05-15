@@ -85,6 +85,22 @@ const (
 	PaneSplitDirectionVertical   PaneSplitDirection = "-v"
 )
 
+// Pane send-keys.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#send-keys
+func (p *Pane) SendKeys(line string) error {
+	_, err := p.tmux.query().
+		cmd("send-keys").
+		fargs("-t", p.Id).
+                pargs(line).
+		run()
+	if err != nil {
+		return errors.New("failed to send keys")
+	}
+
+	return nil
+}
+
 // Kills the pane.
 //
 // Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#kill-pane
