@@ -4,7 +4,6 @@ A **powerful and comprehensive** Go library for interacting with `tmux`, offerin
 
 ## 📌 Requirements
 
-- ✅ **Go** 1.22.3 or higher
 - ✅ **tmux** installed on the system
 
 ## 📦 Installation
