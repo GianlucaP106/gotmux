@@ -199,6 +199,22 @@ func (s *Session) ListPanes() ([]*Pane, error) {
 	return out, nil
 }
 
+// Gets a window by name in this session.
+func (s *Session) GetWindowByName(name string) (*Window, error) {
+	windows, err := s.ListWindows()
+	if err != nil {
+		return nil, errors.New("failed to get window by name")
+	}
+
+	for _, w := range windows {
+		if w.Name == name {
+			return w, nil
+		}
+	}
+
+	return nil, nil
+}
+
 // Gets a window by index in this session.
 func (s *Session) GetWindowByIndex(idx int) (*Window, error) {
 	windows, err := s.ListWindows()
