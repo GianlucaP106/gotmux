@@ -257,6 +257,29 @@ func (t *Tmux) DetachClient(op *DetachClientOptions) error {
 	}
 
 	return nil
+
+}
+
+type SwitchClientOptions struct {
+	TargetSession string
+}
+
+func (t *Tmux) SwitchClient(op *SwitchClientOptions) error {
+	q := t.query().
+		cmd("switch-client")
+
+	if op != nil {
+		if op.TargetSession != "" {
+			q.fargs("-t", op.TargetSession)
+		}
+	}
+
+	_, err := q.run()
+	if err != nil {
+		return errors.New("failed to switch client")
+	}
+
+	return nil
 }
 
 // Kills the server. Kills all clients and servers.
