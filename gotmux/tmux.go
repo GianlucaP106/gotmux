@@ -257,18 +257,25 @@ func (t *Tmux) DetachClient(op *DetachClientOptions) error {
 	}
 
 	return nil
-
 }
 
+// Switch Client command options
 type SwitchClientOptions struct {
 	TargetSession string
+	TargetClient  string
 }
 
+// Switches client to TargetSession for a TargetClient.
+//
+// Reference: https://man.openbsd.org/OpenBSD-current/man1/tmux.1#switch-client
 func (t *Tmux) SwitchClient(op *SwitchClientOptions) error {
 	q := t.query().
 		cmd("switch-client")
 
 	if op != nil {
+		if op.TargetClient != "" {
+			q.fargs("-c", op.TargetClient)
+		}
 		if op.TargetSession != "" {
 			q.fargs("-t", op.TargetSession)
 		}
