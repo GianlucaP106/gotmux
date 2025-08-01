@@ -44,6 +44,7 @@ type Pane struct {
 	Pipe           bool
 	Right          string
 	SearchString   string
+	SessionName    string
 	StartCommand   string
 	StartPath      string
 	Synchronized   bool
@@ -53,6 +54,7 @@ type Pane struct {
 	Tty            string
 	UnseenChanges  bool
 	Width          int
+	WindowIndex    int
 
 	tmux *Tmux
 }
@@ -92,7 +94,7 @@ func (p *Pane) SendKeys(line string) error {
 	_, err := p.tmux.query().
 		cmd("send-keys").
 		fargs("-t", p.Id).
-                pargs(line).
+		pargs(line).
 		run()
 	if err != nil {
 		return errors.New("failed to send keys")
@@ -356,6 +358,7 @@ func (q *query) paneVars() *query {
 		varPanePipe,
 		varPaneRight,
 		varPaneSearchString,
+		varPaneSessionName,
 		varPaneStartCommand,
 		varPaneStartPath,
 		varPaneSynchronized,
@@ -365,6 +368,7 @@ func (q *query) paneVars() *query {
 		varPaneTty,
 		varPaneUnseenChanges,
 		varPaneWidth,
+		varPaneWindowIndex,
 	)
 }
 
@@ -409,8 +413,11 @@ func (q queryResult) toPane(t *Tmux) *Pane {
 	tty := q.get(varPaneTty)
 	unseenChanges := isOne(q.get(varPaneUnseenChanges))
 	width, _ := strconv.Atoi(q.get(varPaneWidth))
+	windowIndex, _ := strconv.Atoi(q.get(varPaneWindowIndex))
+	sessionName := q.get(varPaneSessionName)
 
 	p := &Pane{
+
 		Active:         active,
 		AtBottom:       atBottom,
 		AtLeft:         atLeft,
@@ -441,6 +448,7 @@ func (q queryResult) toPane(t *Tmux) *Pane {
 		Pipe:           pipe,
 		Right:          right,
 		SearchString:   searchString,
+		SessionName:    sessionName,
 		StartCommand:   startCommand,
 		StartPath:      startPath,
 		Synchronized:   synchronized,
@@ -450,8 +458,8 @@ func (q queryResult) toPane(t *Tmux) *Pane {
 		Tty:            tty,
 		UnseenChanges:  unseenChanges,
 		Width:          width,
-
-		tmux: t,
+		WindowIndex:    windowIndex,
+		tmux:           t,
 	}
 
 	return p
