@@ -1,118 +1,57 @@
-# gotmux 🚀
+# gotmux
 
-A **powerful and comprehensive** Go library for interacting with `tmux`, offering a clean and complete interface to manage sessions, windows, and panes efficiently via the `tmux` CLI.
+[![Go Report Card](https://goreportcard.com/badge/github.com/GianlucaP106/gotmux)](https://goreportcard.com/report/github.com/GianlucaP106/gotmux)
+[![Go Reference](https://pkg.go.dev/badge/github.com/GianlucaP106/gotmux/gotmux.svg)](https://pkg.go.dev/github.com/GianlucaP106/gotmux/gotmux)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## 📌 Requirements
+A comprehensive Go library for programmatically interacting with tmux sessions, windows, and panes. gotmux provides a clean, type-safe interface to manage tmux through Go, making it easy to automate terminal multiplexing tasks and build tmux-based applications.
 
-- ✅ **tmux** installed on the system
+## Features
 
-## 📦 Installation
+- **Complete tmux Integration**: Full access to tmux sessions, windows, and panes
+- **Type-Safe API**: Strongly typed structures for all tmux entities
+- **Comprehensive Data Access**: Retrieve all tmux fields and properties
+- **Session Management**: Create, rename, delete, and manage sessions
+- **Window Operations**: Handle windows, layouts, and navigation
+- **Pane Control**: Split, resize, and manage panes programmatically
+- **Server Information**: Query tmux server status and client connections
+- **Error Handling**: Robust error handling throughout the API
 
-Install `gotmux` using:
+## Requirements
+
+- Go 1.22.3 or later
+- tmux installed on your system
+
+## Installation
 
 ```bash
 go get github.com/GianlucaP106/gotmux
 ```
 
-## 🎯 Features
-
-`gotmux` provides a **rich** Go interface to `tmux`, covering:
-
-### 🔹 Session Management
-
-- Create, rename, and delete sessions
-- Attach/detach from sessions
-- List and query session details
-- Group sessions together
-- Monitor session activity
-
-### 🔹 Window Operations
-
-- Create and manage windows
-- Move windows between sessions
-- Set and customize layouts
-- Navigate between windows
-- Track window activity
-
-### 🔹 Pane Control
-
-- Split panes **horizontally** or **vertically**
-- Resize and rearrange panes
-- Capture pane content
-- Sync panes
-- Execute commands within panes
-
-### 🔹 Server & Client Info
-
-- Query server status and version
-- List connected clients
-- Retrieve terminal information
-- Monitor client activity
-- Manage sockets
-
-### 📊 All Data is Returned
-
-gotmux returns all the fields for sessions, windows, panes and more. For example, this is the session type:
+## Quick Start
 
 ```go
-type Session struct {
-    Activity          string
-    Alerts            string
-    Attached          int
-    AttachedList      []string
-    Created           string
-    Format            bool
-    Group             string
-    GroupAttached     int
-    GroupAttachedList []string
-    GroupList         []string
-    GroupManyAttached bool
-    GroupSize         int
-    Grouped           bool
-    Id                string
-    LastAttached      string
-    ManyAttached      bool
-    Marked            bool
-    Name              string
-    Path              string
-    Stack             string
-    Windows           int
-}
-```
+package main
 
-## 🚀 Implementation Status
-
-`gotmux` aims to be **feature-complete** with `tmux`. Not all features are implemented yet, but contributions are welcome! 🤝
-
-## 📖 Documentation
-
-- 📚 [pkg.go.dev](https://pkg.go.dev/github.com/GianlucaP106/gotmux/gotmux)
-- 💡 [Examples Directory](https://github.com/GianlucaP106/gotmux/tree/main/examples)
-
----
-
-## 🛠️ Usage
-
-### ⚡ Quick Start
-
-```go
 import (
-    "fmt"
     "log"
     "github.com/GianlucaP106/gotmux/gotmux"
 )
 
 func main() {
+    // Initialize tmux client
     tmux, err := gotmux.DefaultTmux()
     if err != nil {
         log.Fatal(err)
     }
 
+    // Create a new session
     session, err := tmux.New()
     if err != nil {
         log.Fatal(err)
     }
 
+    // Attach to the session
     err = session.Attach()
     if err != nil {
         log.Fatal(err)
@@ -120,9 +59,126 @@ func main() {
 }
 ```
 
-### 🖥️ Advanced Examples
+## API Overview
 
-#### 🎛️ Session Management
+### Session Management
+
+Create and manage tmux sessions with full control over their properties:
+
+```go
+// Create a new session with custom options
+session, err := tmux.NewSession(&gotmux.SessionOptions{
+    StartDirectory: "/home/user",
+    Name:          "my-session",
+})
+
+// List all sessions
+sessions, err := tmux.ListSessions()
+
+// Attach to a session
+err = session.Attach()
+
+// Rename a session
+err = session.Rename("new-name")
+```
+
+### Window Operations
+
+Manage windows within sessions:
+
+```go
+// Create a new window
+window, err := session.New()
+
+// Get window by index
+window, err := session.GetWindowByIndex(0)
+
+// Select a specific layout
+err = window.SelectLayout(gotmux.WindowLayoutEvenVertical)
+
+// Move window to another session
+err = window.MoveWindow(targetSession)
+```
+
+### Pane Management
+
+Control individual panes within windows:
+
+```go
+// Get pane by index
+pane, err := window.GetPaneByIndex(0)
+
+// Split pane horizontally
+err = pane.Split()
+
+// Split pane vertically
+err = pane.SplitVertical()
+
+// Resize pane
+err = pane.Resize(10, 20)
+
+// Execute command in pane
+err = pane.SendKeys("ls -la")
+```
+
+### Server and Client Information
+
+Query tmux server status and connected clients:
+
+```go
+// Get server information
+server, err := tmux.GetServerInformation()
+fmt.Printf("tmux version: %s\n", server.Version)
+
+// List connected clients
+clients, err := tmux.ListClients()
+for _, client := range clients {
+    fmt.Printf("Client: %s, Session: %s\n", client.Tty, client.Session)
+}
+```
+
+## Data Structures
+
+gotmux provides comprehensive data structures that capture all tmux fields. For example, the Session struct includes:
+
+```go
+type Session struct {
+    Activity          string   // Last activity time
+    Alerts            string   // Alert flags
+    Attached          int      // Number of attached clients
+    AttachedList      []string // List of attached clients
+    Created           string   // Creation time
+    Format            bool     // Format flag
+    Group             string   // Session group
+    GroupAttached     int      // Number of attached clients in group
+    GroupAttachedList []string // List of attached clients in group
+    GroupList         []string // List of sessions in group
+    GroupManyAttached bool     // Multiple clients attached to group
+    GroupSize         int      // Number of sessions in group
+    Grouped           bool     // Whether session is grouped
+    Id                string   // Session ID
+    LastAttached      string   // Last attachment time
+    ManyAttached      bool     // Multiple clients attached
+    Marked            bool     // Marked flag
+    Name              string   // Session name
+    Path              string   // Working directory
+    Stack             string   // Stack information
+    Windows           int      // Number of windows
+}
+```
+
+## Examples
+
+The project includes comprehensive examples in the `examples/` directory:
+
+- **create/**: Basic session, window, and pane creation
+- **sessions/**: Session management operations
+- **windows_panes/**: Window and pane manipulation
+- **listing/**: Querying and listing tmux entities
+- **get_server_info/**: Server information retrieval
+- **list_clients/**: Client connection management
+
+### Example: Advanced Session Management
 
 ```go
 func main() {
@@ -131,35 +187,16 @@ func main() {
         log.Fatal(err)
     }
 
+    // Create session with specific options
     session, err := tmux.NewSession(&gotmux.SessionOptions{
-        StartDirectory: "/home",
-        Name:          "somename",
+        StartDirectory: "/home/user/projects",
+        Name:          "development",
     })
     if err != nil {
         log.Fatal(err)
     }
 
-    err = session.Attach()
-    if err != nil {
-        log.Fatal(err)
-    }
-}
-```
-
-#### 🪟 Window & Pane Management
-
-```go
-func main() {
-    tmux, err := gotmux.DefaultTmux()
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    session, err := tmux.New()
-    if err != nil {
-        log.Fatal(err)
-    }
-
+    // Create a window and split it
     window, err := session.New()
     if err != nil {
         log.Fatal(err)
@@ -170,73 +207,48 @@ func main() {
         log.Fatal(err)
     }
 
+    // Split the pane and execute commands
     err = pane.Split()
     if err != nil {
         log.Fatal(err)
     }
-}
-```
 
-#### 📋 Listing Clients & Server Info
-
-```go
-func main() {
-    tmux, err := gotmux.DefaultTmux()
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    clients, err := tmux.ListClients()
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    for _, c := range clients {
-        fmt.Println("Client:", c.Tty, "Session:", c.Session)
-    }
-
-    server, err := tmux.GetServerInformation()
-    if err != nil {
-        log.Fatal(err)
-    }
-    fmt.Println("tmux version:", server.Version)
-}
-```
-
-#### 🔄 Window Layout Management
-
-```go
-func main() {
-    tmux, err := gotmux.DefaultTmux()
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    session, err := tmux.New()
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    window, err := session.New()
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    err = window.SelectLayout(gotmux.WindowLayoutEvenVertical)
+    err = pane.SendKeys("cd /home/user/projects && ls -la")
     if err != nil {
         log.Fatal(err)
     }
 }
 ```
 
-👉 See the complete list of **[examples](https://github.com/GianlucaP106/gotmux/tree/main/examples)**.
+## Documentation
+
+- **API Reference**: [pkg.go.dev](https://pkg.go.dev/github.com/GianlucaP106/gotmux/gotmux)
+- **Examples**: [examples directory](https://github.com/GianlucaP106/gotmux/tree/main/examples)
+- **Source Code**: [GitHub repository](https://github.com/GianlucaP106/gotmux)
+
+## Contributing
+
+Contributions are welcome! The project aims to provide complete tmux functionality through Go. Please feel free to:
+
+1. Report bugs or request features
+2. Submit pull requests
+3. Improve documentation
+4. Add new examples
+
+## Development Status
+
+gotmux is actively developed and aims to provide complete tmux functionality. While not all tmux features are implemented yet, the core functionality is stable and ready for production use.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Built for the Go community
+- Inspired by the power and flexibility of tmux
+- Designed for automation and programmatic terminal management
 
 ---
 
-## 📜 License
-
-This project is licensed under the **MIT License** – see the [LICENSE](LICENSE) file for details.
-
----
-
-🚀 **Start managing `tmux` with Go today!**
+**Start building powerful tmux applications with Go today!**
