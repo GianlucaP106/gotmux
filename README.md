@@ -19,7 +19,6 @@ A comprehensive Go library for programmatically interacting with tmux sessions, 
 
 ## Requirements
 
-- Go 1.22.3 or later
 - tmux installed on your system
 
 ## Installation
@@ -242,13 +241,3 @@ gotmux is actively developed and aims to provide complete tmux functionality. Wh
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- Built for the Go community
-- Inspired by the power and flexibility of tmux
-- Designed for automation and programmatic terminal management
-
----
-
-**Start building powerful tmux applications with Go today!**
